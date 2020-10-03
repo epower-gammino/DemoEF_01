@@ -6,16 +6,18 @@ namespace DemoEF_01.Models
 {
     public partial class troubleticketContext : DbContext
     {
-        public troubleticketContext(DbContextOptions<troubleticketContext> options) : base(options)
+        public troubleticketContext()
         {
         }
 
-        //public troubleticketContext(DbContextOptions<troubleticketContext> options)
-        //{
-        //}
+        public troubleticketContext(DbContextOptions<troubleticketContext> options)
+            : base(options)
+        {
+        }
 
         public virtual DbSet<Note> Note { get; set; }
         public virtual DbSet<Operatore> Operatore { get; set; }
+        public virtual DbSet<OperatoreUtenti> OperatoreUtenti { get; set; }
         public virtual DbSet<Ticket> Ticket { get; set; }
         public virtual DbSet<Utente> Utente { get; set; }
 
@@ -23,8 +25,8 @@ namespace DemoEF_01.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning to protect potentially sensitive information in your connection string, you should move it out of source code. see http://go.microsoft.com/fwlink/?linkid=723263 for guidance on storing connection strings.
-//                optionsbuilder.usesqlserver("server=desktop-6lud13e;;database=trouble-ticket;trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-6LUD13E;Database=trouble-ticket;Trusted_Connection=True;");
             }
         }
 
@@ -81,6 +83,31 @@ namespace DemoEF_01.Models
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<OperatoreUtenti>(entity =>
+            {
+                entity.HasKey(e => e.OperatoriUtentiId);
+
+                entity.Property(e => e.OperatoriUtentiId)
+                    .HasColumnName("OperatoriUtentiID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.FkOperId).HasColumnName("fk_operID");
+
+                entity.Property(e => e.FkUtentiId).HasColumnName("fk_utentiID");
+
+                entity.HasOne(d => d.FkOper)
+                    .WithMany(p => p.OperatoreUtenti)
+                    .HasForeignKey(d => d.FkOperId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OperatoreUtenti_Operatore");
+
+                entity.HasOne(d => d.FkUtenti)
+                    .WithMany(p => p.OperatoreUtenti)
+                    .HasForeignKey(d => d.FkUtentiId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OperatoreUtenti_Utente");
             });
 
             modelBuilder.Entity<Ticket>(entity =>

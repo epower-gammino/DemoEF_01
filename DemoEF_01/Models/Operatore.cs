@@ -8,6 +8,7 @@ namespace DemoEF_01.Models
         public Operatore()
         {
             Note = new HashSet<Note>();
+            OperatoreUtenti = new HashSet<OperatoreUtenti>();
         }
 
         public int OperId { get; set; }
@@ -15,5 +16,6 @@ namespace DemoEF_01.Models
         public string Cognome { get; set; }
 
         public virtual ICollection<Note> Note { get; set; }
+        public virtual ICollection<OperatoreUtenti> OperatoreUtenti { get; set; }
     }
 }

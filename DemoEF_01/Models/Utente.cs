@@ -7,6 +7,7 @@ namespace DemoEF_01.Models
     {
         public Utente()
         {
+            OperatoreUtenti = new HashSet<OperatoreUtenti>();
             Ticket = new HashSet<Ticket>();
         }
 
@@ -14,6 +15,7 @@ namespace DemoEF_01.Models
         public string Nome { get; set; }
         public string Cognome { get; set; }
 
+        public virtual ICollection<OperatoreUtenti> OperatoreUtenti { get; set; }
         public virtual ICollection<Ticket> Ticket { get; set; }
     }
 }
